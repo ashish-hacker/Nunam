@@ -38,9 +38,9 @@ class Preprocess:
 
         if len(sheet) == 0: # If the sheet is an empty list return None
             return None
-
-        for i in sheet:
-            temp = pd.read_excel(inFile, sheet_name=i)
+        df = pd.read_excel(inFile, sheet_name=sheet[0])
+        for i in range(1, len(sheet)):
+            temp = pd.read_excel(inFile, sheet_name=sheet[i])
             df = pd.concat([df, temp])
         return df
 
@@ -57,7 +57,7 @@ class Preprocess:
         """
         
         for i in filenames:
-            name = self.get_sheet_name(sheet_name_like, i)
+            name = self.get_sheet_names(sheet_name_like, i)
             df = self.get_dataframe(i, name)
             self.dfs.append(df)
         return self.dfs
@@ -100,6 +100,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import cProfile
+    cProfile.run('main()')
 
 
