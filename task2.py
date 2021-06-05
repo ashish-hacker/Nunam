@@ -18,3 +18,12 @@ def create_downsampled_csv(filename):
     df = downsample(df)
     new_filename = filename[:-4] + "Downsampled.csv"
     df.to_csv(new_filename, index = False)
+
+def main():
+    create_downsampled_csv("detail.csv")
+    create_downsampled_csv("detailVol.csv")
+    create_downsampled_csv("detailTemp.csv")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,13 +1,3 @@
-"""
-Processes data(excel files) in chunks and converts them to csv file
-"""
-
-from __future__ import barry_as_FLUFL
-
-__version__ = '0.1'
-__author__ = 'Ashish Kumar Panigrahy'
-
-
 # Import necessary modules
 import pandas as pd
 class Preprocess:
@@ -48,26 +38,10 @@ class Preprocess:
 
         if len(sheet) == 0: # If the sheet is an empty list return None
             return None
-        
-        chunks = []  
-        nr = 10 ** 5 # chunk size
-        sr = 1  # It is initialized to 1 to skip the header part
-        df_header = pd.read_excel(inFile, sheet_name=sheet[0], nrows=1)
-        while True:
-            chunk_df = pd.read_excel(inFile,                  # Read file in chunks
-                                    sheet_name=sheet,
-                                    nrows=nr,
-                                    skiprows=sr,
-                                    header=None)
-            sr += nr
-            if not len(chunk_df):  # If the data is exhausted or read fully break out of the loop
-                break
-            chunks.append(chunk_df)
-            chunk_df = pd.concat(chunk_df)
-            # Rename the columns to concatenate the chunks with the header.
-            columns = {i: col for i, col in enumerate(df_header.columns.tolist())}
-            chunk_df.rename(columns=columns, inplace=True)
-            df = pd.concat([df_header, chunk_df])
+
+        for i in sheet:
+            temp = pd.read_excel(inFile, sheet_name=i)
+            df = pd.concat([df, temp])
         return df
 
     def create_dfs(self,
@@ -94,8 +68,38 @@ class Preprocess:
         df_list - List of dataframes (List)
         csv_filename - The name of the csv file to be created (String)
         """
-        
+
         # remove all None values from the list
-        df_list = list(filter(lambda a: a != None, df_list))
-        df = pd.concat(df_list)
+        lists = []
+        for i in df_list:
+          if i is not None:
+            lists.append(i)
+        df = pd.concat(lists)
         df.to_csv(csv_filename)
+
+
+
+
+def main():
+    p = Preprocess()
+    data_files = ["data.xlsx", "data_1.xlsx"]
+
+    ### Task 1 : Create CSV files
+
+    # Combine all the data in sheets named like "Detail_67_" only, among the two data files provided, and save into 'detail.csv'
+    dfs = p.create_dfs(data_files, "Detail_67_")
+    p.create_csv(dfs, "detail.csv")
+
+    # Combine all the data in sheets named like "DetailVol_67_" only, among the two data files provided, and save into 'detailVol.csv'
+    dfs1 = p.create_dfs(data_files, "DetailVol_67_")
+    p.create_csv(dfs1, "detailVol.csv")
+
+    # Combine all the data in sheets named like "DetailTemp_67_" only, among the two data files provided, and save into 'detailTemp.csv' Provide attention to the column 'Record Index' which provided index values to avoid mismatching the rows while combining multiple files.
+    dfs2 = p.create_dfs(data_files, "DetailTemp_67_")
+    p.create_csv(dfs2, "detailTemp.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+
