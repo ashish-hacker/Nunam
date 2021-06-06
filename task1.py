@@ -87,11 +87,11 @@ def main():
     ### Task 1 : Create CSV files
 
     # Combine all the data in sheets named like "Detail_67_" only, among the two data files provided, and save into 'detail.csv'
-    dfs = p.create_dfs(data_files, "Detail_67_")
+    dfs = p.create_dfs([data_files[0]], "Detail_67_")
     p.create_csv(dfs, "detail.csv")
 
     # Combine all the data in sheets named like "DetailVol_67_" only, among the two data files provided, and save into 'detailVol.csv'
-    dfs1 = p.create_dfs(data_files, "DetailVol_67_")
+    dfs1 = p.create_dfs([data_files[0]], "DetailVol_67_")
     p.create_csv(dfs1, "detailVol.csv")
 
     # Combine all the data in sheets named like "DetailTemp_67_" only, among the two data files provided, and save into 'detailTemp.csv' Provide attention to the column 'Record Index' which provided index values to avoid mismatching the rows while combining multiple files.
